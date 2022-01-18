@@ -4,7 +4,7 @@ from numpy import genfromtxt
 data = genfromtxt('corpus_students_only_validated_targets.csv', delimiter=',')
 
 n_inputs =
-n_outputs =
+n_outputs=
 
 mod = tf.Sequential()
 mod.add(tf.layers.Dense(256, activation='relu', input_shape=(n_inputs, )))
