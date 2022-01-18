@@ -1,7 +1,7 @@
 import numpy as np
 from tensorflow.keras import Sequential, layers
 from sklearn.model_selection import train_test_split
-from data import load_data
+from data import get_in_out_basic_NN
 
 
 # Parameters
@@ -16,7 +16,7 @@ nb_neurone_layer_3 = 64
 
 #Load data
 print("Data loading ...")
-inputs, outputs = load_data()
+inputs, outputs = get_in_out_basic_NN()
 n, p = inputs.shape
 nb_inputs = 7
 nb_outputs = 5
@@ -37,5 +37,5 @@ print("Model created !")
 print("Training of the model ...")
 hist = mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs)
 print("Model trained !")
-mod.save('./')
+mod.save('model/.')
 print("Model saved !")
