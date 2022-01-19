@@ -12,10 +12,10 @@ def load_data():
                          usecols=(4, 5, 6, 7, 8, 9, 10, 29, 30, 31, 32, 33, 53, 54, 55, 56, 57))[1:, :]
     return data
 
-def load_data2():
+def load_data_seq():
     """
-    Load data with the format : [shPitch, shRoll, armYaw, elbPitch, forearmYaw, wriPitch, wriRoll, tgtPosX, tgtPosY,
-    tgtPosZ, tgtPitch, tgtRoll, handRemapPosX, handRemapPosY, handRemapPosZ, handRemapPitch, handRemapRoll]
+    Load data with the format : [tgt_number, shPitch, shRoll, handRemapPosX, handRemapPosY, handRemapPosZ,
+    handRemapPitch, handRemapRoll]
 
     :return: data
     """
@@ -24,7 +24,7 @@ def load_data2():
     return data 
 
 def get_current_target_naive_seq():
-    data = load_data2()
+    data = load_data_seq()
     lastTgtN = 0
     current = []
     target = []
@@ -32,20 +32,16 @@ def get_current_target_naive_seq():
     count = 0
     for i in range(len(data)):
         current.append(data[i,:])
-        #print(data[i, 1])
         if data[i, 0] != lastTgtN:
             target.append(data[i-1,:])
             lastTgtN = data[i, 0]
-            print('count : ', count)
             counts.append(count)
             count = 0
         count = count + 1
     current = np.array(current)
     target = np.array(target)
     counts = np.array(counts)
-    return current, target, counts 
-
-get_current_target_naive_seq()
+    return current, target, counts
 
 def get_in_out_basic_NN():
     """
@@ -58,10 +54,7 @@ def get_in_out_basic_NN():
     :return: inputs, outputs
     """
     data = load_data()
-    #print(data[:, :2])
-    #print(data[:, 12:])
     inputs = np.concatenate((data[:, :2], data[:, 12:]), axis=1)
-    #print(inputs)
     outputs = data[:, 2:7]
     return inputs, outputs
 
@@ -84,9 +77,3 @@ def get_in_out_simple_predictive_NN():
         outputs.append(data[i+1,2:7])
     
     return np.array(inputs), np.array(outputs)
-
-#inputs, outputs = get_in_out_simple_predictive_NN()    
-#print('inputs : ', np.array(inputs).shape)
-#print(inputs)
-#print('outputs : ', np.array(outputs).shape)
-#print(outputs)
