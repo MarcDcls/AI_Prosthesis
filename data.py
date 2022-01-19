@@ -12,6 +12,40 @@ def load_data():
                          usecols=(4, 5, 6, 7, 8, 9, 10, 29, 30, 31, 32, 33, 53, 54, 55, 56, 57))[1:, :]
     return data
 
+def load_data2():
+    """
+    Load data with the format : [shPitch, shRoll, armYaw, elbPitch, forearmYaw, wriPitch, wriRoll, tgtPosX, tgtPosY,
+    tgtPosZ, tgtPitch, tgtRoll, handRemapPosX, handRemapPosY, handRemapPosZ, handRemapPitch, handRemapRoll]
+
+    :return: data
+    """
+    data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
+                         usecols=(2, 4, 5, 53, 54, 55, 56, 57))[1:, :]
+    return data 
+
+def get_current_target_naive_seq():
+    data = load_data2()
+    lastTgtN = 0
+    current = []
+    target = []
+    counts = []
+    count = 0
+    for i in range(len(data)):
+        current.append(data[i,:])
+        #print(data[i, 1])
+        if data[i, 0] != lastTgtN:
+            target.append(data[i-1,:])
+            lastTgtN = data[i, 0]
+            print('count : ', count)
+            counts.append(count)
+            count = 0
+        count = count + 1
+    current = np.array(current)
+    target = np.array(target)
+    counts = np.array(counts)
+    return current, target, counts 
+
+get_current_target_naive_seq()
 
 def get_in_out_basic_NN():
     """
