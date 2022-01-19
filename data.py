@@ -12,36 +12,49 @@ def load_data():
                          usecols=(4, 5, 6, 7, 8, 9, 10, 29, 30, 31, 32, 33, 53, 54, 55, 56, 57))[1:, :]
     return data
 
-def load_data_seq():
+def load_data_seq_hand():
     """
-    Load data with the format : [tgt_number, shPitch, shRoll, handRemapPosX, handRemapPosY, handRemapPosZ,
-    handRemapPitch, handRemapRoll]
+    Load data with the format : [tgt_number, handRemapPosX, handRemapPosY, handRemapPosZ, handRemapPitch, handRemapRoll]
 
     :return: data
     """
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
-                         usecols=(2, 4, 5, 53, 54, 55, 56, 57))[1:, :]
+                         usecols=(2, 53, 54, 55, 56, 57))[1:, :]
+    return data 
+
+def load_data_seq_shoulder():
+    """
+    Load data with the format : [tgt_number, shPitch, shRoll]
+
+    :return: data
+    """
+    data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
+                         usecols=(2, 4, 5))[1:, :]
     return data 
 
 def get_current_target_naive_seq():
-    data = load_data_seq()
-    lastTgtN = 0
-    current = []
-    target = []
-    counts = []
-    count = 0
-    for i in range(len(data)):
-        current.append(data[i,:])
+    data = load_data_seq_hand()
+    lastTgtN = data[0, 0]
+    firsts = [data[0, :]]
+    lasts = []
+    nb_pos = []
+    count = 1
+    for i in range(1, len(data)):
         if data[i, 0] != lastTgtN:
-            target.append(data[i-1,:])
+            lasts.append(data[i-1, 1:])
+            firsts.append(data[i, :])
             lastTgtN = data[i, 0]
-            counts.append(count)
-            count = 0
-        count = count + 1
-    current = np.array(current)
-    target = np.array(target)
-    counts = np.array(counts)
-    return current, target, counts
+            nb_pos.append(count)
+            count = 1
+        else:    
+            count = count + 1
+    lasts.append(data[-1, 1:])
+    nb_pos.append(count)
+    firsts = np.array(firsts)
+    lasts = np.array(lasts)
+    nb_pos = np.array(nb_pos)
+    print(sum(nb_pos))
+    return firsts, lasts, nb_pos
 
 def get_in_out_basic_NN():
     """
