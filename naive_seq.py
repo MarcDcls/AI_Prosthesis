@@ -6,8 +6,6 @@ from tensorflow.keras import models
 def interpolate(posHandStart, posHandEnd, step):
     return np.linspace(posHandStart, posHandEnd, step)
 
-#print(interpolate([0,0,0,0,pi],[5,10,20,pi,2*pi],5))
-
 
 def generate_seq():
     basic_NN = models.load_model("models/basic_NN")
@@ -21,9 +19,9 @@ def generate_seq():
     inputs = np.concatenate((shoulders, hands), axis=1)
     print(inputs.shape)
     
-    """outputs = []
+    outputs = []
     for hand in hands:
         input = np.concatenate(())
-        outputs.append(basic_NN(np.reshape(hand, (1, 7))).numpy())"""
+        outputs.append(basic_NN(np.reshape(hand, (1, 7)[:, 1:])).numpy())
 
 generate_seq()
