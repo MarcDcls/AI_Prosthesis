@@ -8,8 +8,10 @@ def load_data():
 
     :return: data
     """
+    print("Loading general data...")
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
                          usecols=(4, 5, 6, 7, 8, 9, 10, 29, 30, 31, 32, 33, 53, 54, 55, 56, 57))[1:, :]
+    print("General data loaded !")
     return data
 
 def load_data_seq_hand():
@@ -18,31 +20,42 @@ def load_data_seq_hand():
 
     :return: data
     """
+    print("Loading hand data...")
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
                          usecols=(2, 53, 54, 55, 56, 57))[1:, :]
+    print("Hand data loaded !")
     return data 
 
 def load_data_seq_shoulder():
     """
-    Load data with the format : [tgt_number, shPitch, shRoll]
+    Load data with the format : [shPitch, shRoll]
 
     :return: data
     """
+    print("Loading shoulder data...")
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
-                         usecols=(2, 4, 5))[1:, :]
+                         usecols=(4, 5))[1:, :]
+    print("Shoulder data loaded !")
     return data 
 
 def get_current_target_naive_seq():
+    """
+    Prepare the data for the interpolation of the hand trajectory
+
+    :return: list of the hand first configurations, list of the hand last configurations, list of the number of
+    configurations between the first and the last configurations
+    """
     data = load_data_seq_hand()
+    print("Data processing ...")
     lastTgtN = data[0, 0]
-    firsts = [data[0, :]]
+    firsts = [data[0, 1:]]
     lasts = []
     nb_pos = []
     count = 1
     for i in range(1, len(data)):
         if data[i, 0] != lastTgtN:
             lasts.append(data[i-1, 1:])
-            firsts.append(data[i, :])
+            firsts.append(data[i, 1:])
             lastTgtN = data[i, 0]
             nb_pos.append(count)
             count = 1
@@ -50,10 +63,10 @@ def get_current_target_naive_seq():
             count = count + 1
     lasts.append(data[-1, 1:])
     nb_pos.append(count)
+    print("Data processed !")
     firsts = np.array(firsts)
     lasts = np.array(lasts)
     nb_pos = np.array(nb_pos)
-    print(sum(nb_pos))
     return firsts, lasts, nb_pos
 
 def get_in_out_basic_NN():
@@ -90,3 +103,13 @@ def get_in_out_simple_predictive_NN():
         outputs.append(data[i+1,2:7])
     
     return np.array(inputs), np.array(outputs)
+
+def format_data(global_data, prediction, path):
+    """
+    Format the predicted data for Unity and save it in CSV
+
+    :param global_data: global data (from load_data()))
+    :param prediction: predicted angles of the arm
+    :param path: saving location
+    :return: None
+    """
