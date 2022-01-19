@@ -24,7 +24,10 @@ def get_in_out_basic_NN():
     :return: inputs, outputs
     """
     data = load_data()
+    #print(data[:, :2])
+    #print(data[:, 12:])
     inputs = np.concatenate((data[:, :2], data[:, 12:]), axis=1)
+    #print(inputs)
     outputs = data[:, 2:7]
     return inputs, outputs
 
@@ -42,4 +45,14 @@ def get_in_out_simple_predictive_NN():
     data = load_data()
     inputs = []
     outputs = []
-    return inputs, outputs
+    for i in range(len(data)-1):
+        inputs.append(data[i])
+        outputs.append(data[i+1,2:7])
+    
+    return np.array(inputs), np.array(outputs)
+
+#inputs, outputs = get_in_out_simple_predictive_NN()    
+#print('inputs : ', np.array(inputs).shape)
+#print(inputs)
+#print('outputs : ', np.array(outputs).shape)
+#print(outputs)
