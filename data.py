@@ -41,10 +41,11 @@ def load_data_seq_shoulder():
     return data
 
 
-def get_current_target_naive_seq():
+def get_current_target_naive_seq(n):
     """
     Prepare the data for the interpolation of the hand trajectory
 
+    :param n: number of entry to process
     :return: list of the hand first configurations, list of the hand last configurations, list of the number of
     configurations between the first and the last configurations
     """
@@ -55,7 +56,7 @@ def get_current_target_naive_seq():
     lasts = []
     nb_pos = []
     count = 1
-    for i in range(1, len(data)):
+    for i in range(1, n):
         if data[i, 0] != lastTgtN:
             lasts.append(data[i - 1, 1:])
             firsts.append(data[i, 1:])
@@ -120,9 +121,10 @@ def format_data(prediction, path):
     :return: None
     """
     print("Formatting data...")
+    n, p = prediction.shape
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
-                         usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 59, 60, 61, 62, 63, 64))[1:, :]
-    sh_predicted = data[:, 4:6]
+                         usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 59, 60, 61, 62, 63, 64))[1:n+1, :]
+    sh_predicted = data[:n, 4:6]
     formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
     np.savetxt(path, formatted_data, delimiter=',')
     print("Data formatted and saved !")

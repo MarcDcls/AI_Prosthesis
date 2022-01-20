@@ -16,15 +16,16 @@ def interpolate(posHandStart, posHandEnd, step):
     return np.linspace(posHandStart, posHandEnd, step)
 
 
-def generate_naive_seq():
+def generate_naive_seq(n):
     """
     Generate angles of the arm with the basic NN on the naive sequence
 
+    :param n: number of entry to process
     :return: outputs (angles of the arm)
     """
     basic_NN = models.load_model("models/basic_NN")
-    shoulders = load_data_seq_shoulder()
-    firsts, lasts, nb_pos = get_current_target_naive_seq()
+    shoulders = load_data_seq_shoulder()[:n, :]
+    firsts, lasts, nb_pos = get_current_target_naive_seq(n)
     hands = []
     for i in range(len(nb_pos)):
         interpolations = interpolate(firsts[i, :], lasts[i, :], nb_pos[i])
