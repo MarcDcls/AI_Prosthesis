@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers
 from tensorflow.keras import models
+import sklearn.metrics
 
 from data import get_in_out_basic_NN
 
@@ -45,6 +46,10 @@ def generate_basic_NN():
     print("Training of the models ...")
     mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs)
     print("Model trained !")
+    # y_pred = mod.predict(X_test)[0]
+    # print(y_pred.shape)
+    # accuracy_score = sklearn.metrics.accuracy_score(y_test, y_pred)
+    # print("Accuracy :", accuracy_score)
     mod.save('models/basic_NN')
     print("Model saved !")
 

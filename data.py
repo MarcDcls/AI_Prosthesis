@@ -14,6 +14,7 @@ def load_data():
     print("General data loaded !")
     return data
 
+
 def load_data_seq_hand():
     """
     Load data with the format : [tgt_number, handRemapPosX, handRemapPosY, handRemapPosZ, handRemapPitch, handRemapRoll]
@@ -24,7 +25,8 @@ def load_data_seq_hand():
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
                          usecols=(2, 53, 54, 55, 56, 57))[1:, :]
     print("Hand data loaded !")
-    return data 
+    return data
+
 
 def load_data_seq_shoulder():
     """
@@ -36,7 +38,8 @@ def load_data_seq_shoulder():
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
                          usecols=(4, 5))[1:, :]
     print("Shoulder data loaded !")
-    return data 
+    return data
+
 
 def get_current_target_naive_seq():
     """
@@ -54,12 +57,12 @@ def get_current_target_naive_seq():
     count = 1
     for i in range(1, len(data)):
         if data[i, 0] != lastTgtN:
-            lasts.append(data[i-1, 1:])
+            lasts.append(data[i - 1, 1:])
             firsts.append(data[i, 1:])
             lastTgtN = data[i, 0]
             nb_pos.append(count)
             count = 1
-        else:    
+        else:
             count = count + 1
     lasts.append(data[-1, 1:])
     nb_pos.append(count)
@@ -68,6 +71,7 @@ def get_current_target_naive_seq():
     lasts = np.array(lasts)
     nb_pos = np.array(nb_pos)
     return firsts, lasts, nb_pos
+
 
 def get_in_out_basic_NN():
     """
@@ -84,6 +88,7 @@ def get_in_out_basic_NN():
     outputs = data[:, 2:7]
     return inputs, outputs
 
+
 def get_in_out_simple_predictive_NN():
     """
     Split data into inputs (of size 17) and outputs for the predictive NN with the format :
@@ -98,13 +103,14 @@ def get_in_out_simple_predictive_NN():
     data = load_data()
     inputs = []
     outputs = []
-    for i in range(len(data)-1):
+    for i in range(len(data) - 1):
         inputs.append(data[i])
-        outputs.append(data[i+1,2:7])
-    
+        outputs.append(data[i + 1, 2:7])
+
     return np.array(inputs), np.array(outputs)
 
-def format_data(global_data, prediction, path):
+
+def format_data(prediction, path):
     """
     Format the predicted data for Unity and save it in CSV
 
@@ -113,3 +119,11 @@ def format_data(global_data, prediction, path):
     :param path: saving location
     :return: None
     """
+    print("Formatting data...")
+    data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
+                         usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 59, 60, 61, 62, 63, 64))[1:, :]
+    sh_predicted = data[:, 4:6]
+    formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
+    np.savetxt(path, formatted_data, delimiter=',')
+    print("Data formatted and saved !")
+    return data
