@@ -129,3 +129,27 @@ def format_data(prediction, path):
     np.savetxt(path, formatted_data, delimiter=',')
     print("Data formatted and saved !")
     return data
+
+def format_data_from_csv(prediction_csv, path):
+
+     """
+     Format the predicted data from a csv file for Unity and save it in CSV
+
+    :param global_data: global data (from load_data()))
+    :param prediction: predicted angles of the arm in a csv file
+    :param path: saving location
+    :return: None
+    """
+     print("Formatting data...")
+     prediction = np.genfromtxt(prediction_csv, delimiter=',')
+     #print(prediction)
+     n, p = prediction.shape
+     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
+                         usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 59, 60, 61, 62, 63, 64))[1:n+1, :]
+     sh_predicted = data[:n, 4:6]
+     formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
+     np.savetxt(path, formatted_data, delimiter=',')
+     print("Data formatted and saved !")
+     return data
+
+format_data_from_csv('results_bras.csv', 'formated_data.csv')
