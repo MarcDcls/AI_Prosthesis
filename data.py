@@ -41,7 +41,7 @@ def load_data_seq_shoulder():
     return data
 
 
-def get_current_target_naive_seq(n):
+def get_first_and_last_hands_seq(n):
     """
     Prepare the data for the interpolation of the hand trajectory
 
@@ -50,6 +50,40 @@ def get_current_target_naive_seq(n):
     configurations between the first and the last configurations
     """
     data = load_data_seq_hand()
+    print("Data processing ...")
+    lastTgtN = data[0, 0]
+    firsts = [data[0, 1:]]
+    lasts = []
+    nb_pos = []
+    count = 1
+    for i in range(1, n):
+        if data[i, 0] != lastTgtN:
+            lasts.append(data[i - 1, 1:])
+            firsts.append(data[i, 1:])
+            lastTgtN = data[i, 0]
+            nb_pos.append(count)
+            count = 1
+        else:
+            count = count + 1
+    lasts.append(data[-1, 1:])
+    nb_pos.append(count)
+    print("Data processed !")
+    firsts = np.array(firsts)
+    lasts = np.array(lasts)
+    nb_pos = np.array(nb_pos)
+    return firsts, lasts, nb_pos
+
+def get_first_and_last_hands_and_shoulders_seq(n):
+    """
+    Prepare the data for the interpolation of the arm trajectory
+
+    :param n: number of entry to process
+    :return: list of the hand/shoulder first configurations, list of the hand/shoulder last configurations, list of
+    the number of configurations between the first and the last configurations
+    """
+    hands = load_data_seq_hand()[:n, :]
+    shoulders = load_data_seq_shoulder()[:n, :]
+    data = np.concatenate((np.reshape(hands[:, 0], (n, 1)), shoulders, hands[:, 1:]), axis=1)
     print("Data processing ...")
     lastTgtN = data[0, 0]
     firsts = [data[0, 1:]]
@@ -111,7 +145,7 @@ def get_in_out_simple_predictive_NN():
     return np.array(inputs), np.array(outputs)
 
 
-def format_data(prediction, path):
+def format_data(prediction, path, add_cols=None):
     """
     Format the predicted data for Unity and save it in CSV
 
@@ -125,7 +159,9 @@ def format_data(prediction, path):
     data = np.genfromtxt('data/corpus_students_only_validated_targets.csv', delimiter=',',
                          usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 59, 60, 61, 62, 63, 64))[1:n+1, :]
     sh_predicted = data[:n, 4:6]
-    formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
+    if add_cols is not None:
+        formatted_data = np.concatenate((data, sh_predicted, prediction, add_cols), axis=1)
+    else:
+        formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
     np.savetxt(path, formatted_data, delimiter=',')
     print("Data formatted and saved !")
-    return data

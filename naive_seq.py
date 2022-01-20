@@ -1,7 +1,7 @@
 import numpy as np
 from tensorflow.keras import models
 
-from data import get_current_target_naive_seq, load_data_seq_shoulder
+from data import get_first_and_last_hands_seq, load_data_seq_shoulder, get_first_and_last_hands_and_shoulders_seq
 
 
 def interpolate(posHandStart, posHandEnd, step):
@@ -25,7 +25,7 @@ def generate_naive_seq(n):
     """
     basic_NN = models.load_model("models/basic_NN")
     shoulders = load_data_seq_shoulder()[:n, :]
-    firsts, lasts, nb_pos = get_current_target_naive_seq(n)
+    firsts, lasts, nb_pos = get_first_and_last_hands_seq(n)
     hands = []
     for i in range(len(nb_pos)):
         interpolations = interpolate(firsts[i, :], lasts[i, :], nb_pos[i])
@@ -35,4 +35,16 @@ def generate_naive_seq(n):
     print("Predicting sequence ...")
     outputs = basic_NN.predict(inputs)
     print("Sequence predicted !")
-    return outputs
+    return outputs, hands
+
+def generate_interpolated_seq(n):
+    basic_NN = models.load_model("models/basic_NN")
+    firsts, lasts, nb_pos = get_first_and_last_hands_and_shoulders_seq(n)
+    output_firsts = basic_NN.predict(firsts)
+    output_lasts = basic_NN.predict(lasts)
+    outputs = []
+    for i in range(len(nb_pos)):
+        interpolations = interpolate(output_firsts[i, :], output_lasts[i, :], nb_pos[i])
+        for j in range(len(interpolations)):
+            outputs.append(interpolations[j])
+    return np.array(outputs)
