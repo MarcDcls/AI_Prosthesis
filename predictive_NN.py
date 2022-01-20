@@ -5,8 +5,8 @@ from data import get_in_out_simple_predictive_NN
 
 
 # Parameters
-learning_rate = 1.59e-7      # unused
-momentum = 0.95              # unused
+learning_rate = 1.59e-7
+momentum = 0.95
 nb_epochs = 10
 batch_size = 128
 test_ratio = 0.3
