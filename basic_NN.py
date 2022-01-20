@@ -2,7 +2,7 @@ from random import randint
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-from tensorflow.keras import Sequential, layers
+from tensorflow.keras import Sequential, layers, optimizers
 from tensorflow.keras import models
 import sklearn.metrics
 
@@ -40,17 +40,12 @@ def generate_basic_NN():
     mod.add(layers.Dropout(0.5))
     mod.add(layers.Dense(nb_neurone_layer_3, activation='relu'))
     mod.add(layers.Dense(nb_outputs, activation='linear'))
-    mod.compile(loss='mse')
+    mod.compile(optimizer=optimizers.RMSprop(lr=learning_rate, momentum=momentum), loss='mse')
     print("Model created !")
 
     print("Training of the models ...")
-    mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs)
+    mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs, validation_data=(X_test, y_test))
     print("Model trained !")
-    # y_pred = mod.predict(X_test)[0]
-    # print(y_pred.shape)
-    # accuracy_score = sklearn.metrics.accuracy_score(y_test, y_pred)
-    # print("Accuracy :", accuracy_score)
-    mod.save('models/basic_NN')
     print("Model saved !")
 
 
