@@ -188,3 +188,5 @@ def format_data_from_csv(prediction_csv, path):
      np.savetxt(path, formatted_data, delimiter=',')
      print("Data formatted and saved !")
 
+format_data_from_csv('results_bras_generative.csv', 'formated_generative_data.csv')     
+

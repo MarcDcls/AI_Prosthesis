@@ -35,21 +35,13 @@ def generate_smart_generative_seq():
 
     result_bras = []
     computed_output = data[0,6:11]
-    print('sp : ', computed_output)
     for i in range(1000):
-        #inputs = np.concatenate((data[i,:6] , computed_output, data[i,11:]), axis=1)
-        print(data[i,:7].shape)
-        print(computed_output.shape)
-        print(data[i,12:].shape)
-        print('-----------------')
-        #computed_output = predictive_NN.predict(np.reshape(inputs, (1, 17)))[0]
-        #result_bras.append(computed_output)  
-        #print(i)  
-    #print(computed_output)
+        inputs = np.concatenate((data[i,:7] , computed_output, data[i,12:]), axis=0)
+        computed_output = predictive_NN.predict(np.reshape(inputs, (1, 17)))[0]
+        result_bras.append(computed_output)  
+    
     result_bras = np.array(result_bras)
-    print(result_bras.shape)    
+    print(result_bras.shape)
     
     np.savetxt('results_bras_generative.csv', result_bras, delimiter=',') 
 
-
-generate_smart_generative_seq()
