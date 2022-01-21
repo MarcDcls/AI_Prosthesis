@@ -25,7 +25,7 @@ def generate_predictive_NN():
     print("Data loading ...")
     inputs, outputs = get_in_out_simple_predictive_NN()
     n, p = inputs.shape
-    nb_inputs = 17
+    nb_inputs = 12 #17
     nb_outputs = 5
 
     X_train, X_test, y_train, y_test = train_test_split(inputs, outputs, test_size=test_ratio)

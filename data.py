@@ -142,8 +142,16 @@ def get_in_out_simple_predictive_NN():
         inputs.append(data[i])
         outputs.append(data[i + 1, 2:7])
 
-    return np.array(inputs), np.array(outputs)
+    inputs = np.array(inputs)
+    inputs = inputs[:,:12]
 
+    
+    outputs = np.array(outputs)
+    #print(inputs.shape)
+    #print(outputs.shape)
+    return inputs, outputs
+
+#get_in_out_simple_predictive_NN()
 
 def format_data(prediction, path, add_cols=None):
     """
@@ -188,5 +196,6 @@ def format_data_from_csv(prediction_csv, path):
      np.savetxt(path, formatted_data, delimiter=',')
      print("Data formatted and saved !")
 
-format_data_from_csv('results_bras_generative.csv', 'formated_generative_data.csv')     
+#format_data_from_csv('results_bras_generative.csv', 'formated_generative_data.csv')     
 
+format_data_from_csv('results_bras.csv', 'formated_data.csv') 
