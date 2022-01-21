@@ -17,7 +17,7 @@ nb_neurone_layer_3 = 64
 
 def generate_predictive_NN():
     """
-    Generate the predictive NN which predict the inverse kinematic
+    Generate the predictive NN which predict the next angles of the arm based on the current ones
 
     :return: None
     """

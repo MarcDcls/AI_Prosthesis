@@ -4,7 +4,8 @@ import numpy as np
 
 def generate_smart_seq():
     """
-    Generate angles of the arm with the predictive NN on the smart sequence
+    Generate angles of the arm with the predictive NN during the sequence based on the last real configuration of the
+    arm for each prediction
 
     :return: outputs (angles of the arm)
     """
@@ -26,7 +27,8 @@ def generate_smart_seq():
 
 def generate_smart_generative_seq():
     """
-    Generate angles of the arm with the predictive NN on the smart generative sequence
+    Generate angles of the arm with the predictive NN during the sequence by generating the prediction based only on
+    the first configuration of the arm
 
     :return: outputs (angles of the arm)
     """
