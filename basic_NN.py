@@ -1,22 +1,21 @@
-from random import randint
-
 import numpy as np
+import sklearn.metrics
+from data import get_in_out_basic_NN
+from random import randint
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers, optimizers
 from tensorflow.keras import models
-import sklearn.metrics
-
-from data import get_in_out_basic_NN
 
 # Parameters
-learning_rate = 1.59e-7  # unused
-momentum = 0.95  # unused
+learning_rate = 1.59e-7
+momentum = 0.95
 nb_epochs = 10
 batch_size = 128
 test_ratio = 0.3
 nb_neurone_layer_1 = 256
 nb_neurone_layer_2 = 256
 nb_neurone_layer_3 = 64
+
 
 def generate_basic_NN():
     """
@@ -32,7 +31,6 @@ def generate_basic_NN():
     nb_outputs = 5
 
     X_train, X_test, y_train, y_test = train_test_split(inputs, outputs, test_size=test_ratio, random_state=1)
-    print("Data loaded !")
 
     mod = Sequential()
     mod.add(layers.Dense(nb_neurone_layer_1, activation='relu', input_shape=(nb_inputs,)))

@@ -1,8 +1,7 @@
 import numpy as np
-from tensorflow.keras import Sequential, layers
-from sklearn.model_selection import train_test_split
 from data import get_in_out_simple_predictive_NN
-
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import Sequential, layers
 
 # Parameters
 learning_rate = 1.59e-7
@@ -21,16 +20,13 @@ def generate_predictive_NN():
 
     :return: None
     """
-    #Load data
-    print("Data loading ...")
+    # Load data
     inputs, outputs = get_in_out_simple_predictive_NN()
     n, p = inputs.shape
-    nb_inputs = 12 #17
+    nb_inputs = 12  # 17
     nb_outputs = 5
 
     X_train, X_test, y_train, y_test = train_test_split(inputs, outputs, test_size=test_ratio)
-    print("Data loaded !")
-
 
     mod = Sequential()
     mod.add(layers.Dense(nb_neurone_layer_1, activation='relu', input_shape=(nb_inputs,)))
@@ -42,9 +38,7 @@ def generate_predictive_NN():
     print("Model created !")
 
     print("Training of the model ...")
-    hist = mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs,validation_data=(X_test, y_test))
+    mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs, validation_data=(X_test, y_test))
     print("Model trained !")
     mod.save('models/predictive_NN')
     print("Model saved !")
-
-generate_predictive_NN()   

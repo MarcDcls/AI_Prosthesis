@@ -176,7 +176,6 @@ def format_data(prediction, path, add_cols=None):
 
 
 def format_data_from_csv(prediction_csv, path):
-
      """
      Format the predicted data from a csv file for Unity and save it in CSV
 
@@ -195,7 +194,3 @@ def format_data_from_csv(prediction_csv, path):
      formatted_data = np.concatenate((data, sh_predicted, prediction), axis=1)
      np.savetxt(path, formatted_data, delimiter=',')
      print("Data formatted and saved !")
-
-#format_data_from_csv('results_bras_generative.csv', 'formated_generative_data.csv')     
-
-format_data_from_csv('results_bras.csv', 'formated_data.csv') 
