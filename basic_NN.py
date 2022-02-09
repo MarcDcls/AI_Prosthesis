@@ -5,6 +5,7 @@ from random import randint
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential, layers, optimizers
 from tensorflow.keras import models
+import matplotlib.pyplot as plt
 
 # Parameters
 learning_rate = 1.59e-7
@@ -42,9 +43,21 @@ def generate_basic_NN():
     print("Model created !")
 
     print("Training of the models ...")
-    mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs, validation_data=(X_test, y_test))
+    hist = mod.fit(X_train, y_train, batch_size=batch_size, epochs=nb_epochs, validation_data=(X_test, y_test))
     print("Model trained !")
     print("Model saved !")
+
+    loss_values = hist.history['loss']
+    val_loss_values = hist.history['val_loss']
+    epochs = range(1, len(loss_values) + 1)
+
+    plt.plot(epochs, loss_values, label='Training Loss')
+    plt.plot(epochs, val_loss_values, label='Validation Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+
+    plt.show()
 
 
 def test_basic_NN(n=10):
